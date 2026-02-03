@@ -36,9 +36,37 @@ JobPilot is a backend REST API that helps users track job applications, manage r
 
 ## Getting Started
 
-1. Clone the repo
-2. Install dependencies
-3. npm install
-    Create a .env file
-    Run the server
-4. npm run dev
+### 1. Clone the repo
+```bash
+git clone https://github.com/tpdinh10/jobpilot-api.git
+cd jobpilot-api
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Create a .env file
+(.env should not be committed)
+```env
+PORT=5000
+MONGO_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRES_IN=7d
+```
+### 4. Run the server
+```bash
+npm run dev
+```
+### 5. Test the API
+
+Open your browser or API client and visit:
+```bash
+http://localhost:5000/health
+```
+
+Expected response:
+```json
+{ "status": "ok" }
+```
