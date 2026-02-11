@@ -42,9 +42,17 @@ exports.matchResumeToJob = async (req, res) => {
 
 exports.getMatches = async (req, res) => {
   try {
-    const matches = await Match.find({ userId: req.userId }).sort({ createdAt: -1 });
+    const { jobId, resumeId } = req.query;
+
+    const filter = { userId: req.userId };
+    if (jobId) filter.jobId = jobId;
+    if (resumeId) filter.resumeId = resumeId;
+
+    const matches = await Match.find(filter).sort({ createdAt: -1 });
+
     return res.json({ matches });
   } catch (err) {
     return res.status(500).json({ message: "server error", error: err.message });
   }
 };
+
