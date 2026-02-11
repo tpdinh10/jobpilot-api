@@ -32,7 +32,7 @@ function mapAlias(word) {
 function normalizeText(text) {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9.\s]/g, "") // keep dots so "node.js" stays together first
+    .replace(/[^a-z0-9.\s]/g, " ") // keep dots so "node.js" stays together first
     .split(/\s+/)
     .map(w => w.replace(/\.+$/g, "")) // remove trailing dots
     .filter(word => word.length > 2 && !stopWords.has(word))
