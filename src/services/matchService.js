@@ -8,6 +8,22 @@ const aliases = {
   "reactjs": "react",
   "expressjs": "express"
 };
+const weights = {
+  nodejs: 3,
+  mongodb: 3,
+  jwt: 3,
+  express: 2,
+  react: 2,
+  javascript: 2,
+  typescript: 2,
+  api: 1,
+  rest: 1,
+  git: 1
+};
+
+function getWeight(word) {
+  return weights[word] || 1;
+}
 
 function mapAlias(word) {
   return aliases[word] || word;
@@ -30,18 +46,23 @@ function getMatchScore(resumeText, jobText) {
   const matched = [];
   const missing = [];
 
+  let matchedWeight = 0;
+  let totalWeight = 0;
+
   jobWords.forEach(word => {
+    const w = getWeight(word);
+    totalWeight += w;
+
     if (resumeWords.has(word)) {
       matched.push(word);
+      matchedWeight += w;
     } else {
       missing.push(word);
     }
   });
 
   const score =
-    jobWords.size === 0
-      ? 0
-      : Math.round((matched.length / jobWords.size) * 100);
+    totalWeight === 0 ? 0 : Math.round((matchedWeight / totalWeight) * 100);
 
   return {
     score,
