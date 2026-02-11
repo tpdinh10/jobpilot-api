@@ -1,13 +1,14 @@
 const stopWords = require("../utils/stopWords");
+
 const aliases = {
   "node.js": "nodejs",
-  "node": "nodejs",
-  "mongodb": "mongodb",
-  "mongo": "mongodb",
-  "js": "javascript",
-  "reactjs": "react",
-  "expressjs": "express"
+  node: "nodejs",
+  mongo: "mongodb",
+  js: "javascript",
+  reactjs: "react",
+  expressjs: "express"
 };
+
 const weights = {
   nodejs: 3,
   mongodb: 3,
@@ -30,16 +31,16 @@ function mapAlias(word) {
 }
 
 function normalizeText(text) {
-  return text
+  return (text || "")
     .toLowerCase()
-    .replace(/[^a-z0-9.\s]/g, " ") // keep dots so "node.js" stays together first
+    .replace(/[^a-z0-9.\s]/g, " ")     // replace punctuation with spaces
     .split(/\s+/)
-    .map(w => w.replace(/\.+$/g, "")) // remove trailing dots
+    .map(w => w.replace(/\.+$/g, ""))  // remove trailing dots
     .filter(word => word.length > 2 && !stopWords.has(word))
     .map(mapAlias);
 }
 
-function getMatchScore(resumeText, jobText) {
+function getMatchScore(resumeText = "", jobText = "") {
   const resumeWords = new Set(normalizeText(resumeText));
   const jobWords = new Set(normalizeText(jobText));
 
@@ -61,14 +62,9 @@ function getMatchScore(resumeText, jobText) {
     }
   });
 
-  const score =
-    totalWeight === 0 ? 0 : Math.round((matchedWeight / totalWeight) * 100);
+  const score = totalWeight === 0 ? 0 : Math.round((matchedWeight / totalWeight) * 100);
 
-  return {
-    score,
-    matchedKeywords: matched,
-    missingKeywords: missing
-  };
+  return { score, matchedKeywords: matched, missingKeywords: missing };
 }
 
 module.exports = { getMatchScore };
