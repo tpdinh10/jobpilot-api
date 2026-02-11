@@ -48,11 +48,15 @@ exports.getMatches = async (req, res) => {
     if (jobId) filter.jobId = jobId;
     if (resumeId) filter.resumeId = resumeId;
 
-    const matches = await Match.find(filter).sort({ createdAt: -1 });
+    const matches = await Match.find(filter)
+      .populate("jobId", "title company")       // only return title + company
+      .populate("resumeId", "title")            // only return resume title
+      .sort({ createdAt: -1 });
 
     return res.json({ matches });
   } catch (err) {
     return res.status(500).json({ message: "server error", error: err.message });
   }
 };
+
 
