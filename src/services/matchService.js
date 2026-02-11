@@ -1,11 +1,26 @@
 const stopWords = require("../utils/stopWords");
+const aliases = {
+  "node.js": "nodejs",
+  "node": "nodejs",
+  "mongodb": "mongodb",
+  "mongo": "mongodb",
+  "js": "javascript",
+  "reactjs": "react",
+  "expressjs": "express"
+};
+
+function mapAlias(word) {
+  return aliases[word] || word;
+}
 
 function normalizeText(text) {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/[^a-z0-9.\s]/g, "") // keep dots so "node.js" stays together first
     .split(/\s+/)
-    .filter(word => word.length > 2 && !stopWords.has(word));
+    .map(w => w.replace(/\.+$/g, "")) // remove trailing dots
+    .filter(word => word.length > 2 && !stopWords.has(word))
+    .map(mapAlias);
 }
 
 function getMatchScore(resumeText, jobText) {
