@@ -133,3 +133,42 @@ Expected response:
 
 { "status": "ok" }
 ```
+Quick Test Flow
+
+To test the match feature end-to-end:
+
+1. Register or login to obtain a JWT token.
+
+2. Create a job:
+```json
+POST /api/jobs
+{
+  "title": "Backend Engineer",
+  "company": "DemoCorp",
+  "description": "Node.js MongoDB Express JWT React Git"
+}
+```
+
+
+3. Create a resume:
+```json
+POST /api/resumes
+{
+  "title": "Resume v1",
+  "content": "Built REST APIs with Node, Mongo, Express and Git."
+}
+```
+
+4. Run match:
+```json
+POST /api/match
+{
+  "jobId": "<job_id>",
+  "resumeId": "<resume_id>"
+}
+```
+
+All protected routes require:
+```makefile
+Authorization: Bearer <your_jwt_token>
+```
