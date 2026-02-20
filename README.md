@@ -1,6 +1,12 @@
 # JobPilot API
 
-JobPilot is a backend REST API that helps users track job applications, manage resume versions, and plan their job search.
+JobPilot is a backend REST API that allows users to track job applications, manage resume versions, and compute resume-to-job match scores using weighted keyword analysis.
+
+## Live Demo (Deployed API)
+Base URL: https://jobpilot-api.onrender.com
+
+Health Check:
+GET https://jobpilot-api.onrender.com/health
 
 ## Tech Stack
 - Node.js
@@ -69,8 +75,8 @@ Example response
 GET /api/match
 
 Returns saved match history for the logged-in user.
+**Headers**
 ```bash
-Headers
 Authorization: Bearer <your_jwt_token>
 ```
 Example response
@@ -90,21 +96,20 @@ Example response
   ]
 }
 ```
-Getting Started
+## Getting Started
 
-1. Clone the repo
+### 1. Clone the repo
 ```bash
 git clone https://github.com/tpdinh10/jobpilot-api.git
 cd jobpilot-api
 ```
 
-2. Install dependencies
+### 2. Install dependencies
 ```bash
 npm install
 ```
 
-3. Create a .env file
-
+### 3. Create a .env file
 (.env should not be committed)
 
 ```env
@@ -114,41 +119,37 @@ JWT_SECRET=your_jwt_secret
 JWT_EXPIRES_IN=7d
 ```
 
-4. Run the server
+### 4. Run the server
 ```bash
 npm run dev
 ```
 
-5. Test the API
+### 5. Test the API
 
 Open your browser or API client and visit:
 ```bash
-
 http://localhost:5000/health
 ```
 
-
 Expected response:
 ```json
-
 { "status": "ok" }
 ```
-Quick Test Flow
+## Quick Test Flow
 
 To test the match feature end-to-end:
 
 1. Register or login to obtain a JWT token.
 
 2. Create a job:
-```json
 POST /api/jobs
+```json
 {
   "title": "Backend Engineer",
   "company": "DemoCorp",
   "description": "Node.js MongoDB Express JWT React Git"
 }
 ```
-
 
 3. Create a resume:
 ```json
