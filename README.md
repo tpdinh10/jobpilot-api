@@ -1,12 +1,12 @@
 # JobPilot API
 
-JobPilot is a backend REST API that allows users to track job applications, manage resume versions, and compute resume-to-job match scores using weighted keyword analysis.
+Backend REST API that allows users to track job applications, manage resume versions, and compute resume-to-job match scores using weighted keyword analysis.
 
+Deployed production-ready API with authentication, user-scoped data access, and match history tracking.
 ## Live Demo (Deployed API)
-Base URL: https://jobpilot-api.onrender.com
+Base URL: https://jobpilot-api.onrender.com  
 
-Health Check:
-GET https://jobpilot-api.onrender.com/health
+Health Check: GET https://jobpilot-api.onrender.com/health
 
 ## Tech Stack
 - Node.js
@@ -14,14 +14,19 @@ GET https://jobpilot-api.onrender.com/health
 - MongoDB Atlas
 - Mongoose
 - JWT Authentication
+- Compound Indexing
+- Render Deployment
 
 ## Features
-- User authentication (register, login)
+- User authentication (register, login, profile)
 - JWT-protected routes
-- Jobs CRUD (create, read, update, delete)
+- Full CRUD for jobs
 - Resume version storage
-- Resume-to-job match scoring (keyword overlap) + match history
-- User ownership enforcement
+- Resume-to-job match scoring using weighted keyword analysis and normalization
+- Normalization and keyword filtering
+- Match history tracking
+- Strict user ownership enforcement
+- Production deployment on Render
 
 ## API Endpoints
 
@@ -42,18 +47,22 @@ GET https://jobpilot-api.onrender.com/health
 - GET /api/resumes
 
 ### Match (protected)
+All match routes require:
+
+Authorization: `Bearer <your_jwt_token>`
+
 - POST /api/match
 - GET /api/match
 
 #### POST /api/match
 Calculates a match score between a saved resume and a saved job description and saves the result.
 
-**Headers**
-```bash
-Authorization: Bearer <your_jwt_token>
-Content-Type: application/json
-```
-Body
+Headers
+Authorization: `Bearer <your_jwt_token>`
+
+Content-Type: `application/json`
+
+Request Body
 
 ```json
 {
@@ -72,13 +81,14 @@ Example response
   "matchId": "<match_id>"
 }
 ```
-GET /api/match
+`GET /api/match`
 
 Returns saved match history for the logged-in user.
-**Headers**
-```bash
-Authorization: Bearer <your_jwt_token>
-```
+
+Headers
+
+Authorization: `Bearer <your_jwt_token>`
+
 Example response
 
 ```json
@@ -123,26 +133,15 @@ JWT_EXPIRES_IN=7d
 ```bash
 npm run dev
 ```
+Server runs at: `http://localhost:5000`
 
-### 5. Test the API
-
-Open your browser or API client and visit:
-```bash
-http://localhost:5000/health
-```
-
-Expected response:
-```json
-{ "status": "ok" }
-```
 ## Quick Test Flow
-
-To test the match feature end-to-end:
 
 1. Register or login to obtain a JWT token.
 
 2. Create a job:
-POST /api/jobs
+
+`POST /api/jobs`
 ```json
 {
   "title": "Backend Engineer",
@@ -150,19 +149,19 @@ POST /api/jobs
   "description": "Node.js MongoDB Express JWT React Git"
 }
 ```
-
 3. Create a resume:
+
+`POST /api/resumes`
 ```json
-POST /api/resumes
 {
   "title": "Resume v1",
   "content": "Built REST APIs with Node, Mongo, Express and Git."
 }
 ```
-
 4. Run match:
+
+`POST /api/match`
 ```json
-POST /api/match
 {
   "jobId": "<job_id>",
   "resumeId": "<resume_id>"
@@ -170,6 +169,5 @@ POST /api/match
 ```
 
 All protected routes require:
-```makefile
-Authorization: Bearer <your_jwt_token>
-```
+
+`Authorization: Bearer <your_jwt_token>`
